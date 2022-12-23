@@ -19,6 +19,8 @@ type PropsType = {
     changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void
     removeTodolist: (id: string) => void
     filter: FilterValuesType
+    updateTask: (todoListID: string, taskID: string, newTask: string) => void
+    updateTodoList: (todoListID: string, newTask: string) => void
 }
 
 export function Todolist(props: PropsType) {
@@ -54,8 +56,13 @@ export function Todolist(props: PropsType) {
     const addTaskHandler = (newTitle: string) => {
         props.addTask(props.id, newTitle)
     }
+    const updateTodoListHandler = (newTitle: string) => {
+        props.updateTodoList(props.id, newTitle)
+    }
+
     return <div>
-        <h3> {props.title}
+        <h3><EditableSpan title={props.title} callback={updateTodoListHandler}/>
+
             <button onClick={removeTodolist}>x</button>
         </h3>
         <Input callBack={addTaskHandler}/>
@@ -76,11 +83,14 @@ export function Todolist(props: PropsType) {
                         let newIsDoneValue = e.currentTarget.checked;
                         props.changeTaskStatus(t.id, newIsDoneValue, props.id);
                     }
+                    const updateTaskHadler = (newTitle: string) => {
+                        props.updateTask(props.id, t.id, newTitle)
+                    }
 
                     return <li key={t.id} className={t.isDone ? "is-done" : ""}>
                         <input type="checkbox" onChange={onChangeHandler} checked={t.isDone}/>
                         {/*<span>{t.title}</span>*/}
-                        <EditableSpan title={t.title}/>
+                        <EditableSpan title={t.title} callback={updateTaskHadler}/>
                         <button onClick={onClickHandler}>x</button>
                     </li>
                 })
